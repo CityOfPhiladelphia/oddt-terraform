@@ -2,8 +2,9 @@ provider "aws" {
   region = "${var.aws_region}"
 }
 
-#### TODO: !!!!!! name and department tags?
-#### TODO: !!!!!! underscores vs hyphens
+#### TODO: dropbox S3 and permissions
+#### TODO: Domains?
+#### TODO: SSL?
 
 ## EC2
 
@@ -11,34 +12,59 @@ provider "aws" {
 
 data "aws_availability_zones" "available" {}
 
-resource "aws_vpc" "oddt-data" {
+resource "aws_vpc" "data_engineering" {
   cidr_block = "10.0.0.0/16"
-}
 
-resource "aws_subnet" "oddt-data" {
-  count             = "${var.az_count}"
-  cidr_block        = "${cidrsubnet(aws_vpc.oddt-data.cidr_block, 8, count.index)}"
-  availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
-  vpc_id            = "${aws_vpc.oddt-data.id}"
-}
-
-resource "aws_internet_gateway" "oddt-data-gateway" {
-  vpc_id = "${aws_vpc.oddt-data.id}"
-}
-
-resource "aws_route_table" "oddt-data-routing-table" {
-  vpc_id = "${aws_vpc.oddt-data.id}"
-
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = "${aws_internet_gateway.oddt-data-gateway.id}"
+  tags {
+      Name = "${var.name_prefix}"
+      Department = "${var.department}"
   }
 }
 
-resource "aws_route_table_association" "oddt-data-routing-table-association" {
+resource "aws_subnet" "data_engineering" {
+  count             = "${var.az_count}"
+  cidr_block        = "${cidrsubnet(aws_vpc.data_engineering.cidr_block, 8, count.index)}"
+  availability_zone = "${data_engineering.aws_availability_zones.available.names[count.index]}"
+  vpc_id            = "${aws_vpc.data_engineering.id}"
+
+  tags {
+      Name = "${var.name_prefix}-${self.availability_zone}"
+      Department = "${var.department}"
+  }
+}
+
+resource "aws_internet_gateway" "data_engineering" {
+  vpc_id = "${aws_vpc.data_engineering.id}"
+
+  tags {
+      Name = "${var.name_prefix}"
+      Department = "${var.department}"
+  }
+}
+
+resource "aws_route_table" "data_engineering" {
+  vpc_id = "${aws_vpc.data_engineering.id}"
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = "${aws_internet_gateway.data_engineering.id}"
+  }
+
+  tags {
+      Name = "${var.name_prefix}"
+      Department = "${var.department}"
+  }
+}
+
+resource "aws_route_table_association" "data_routing_table_association" {
   count          = "${var.az_count}"
-  subnet_id      = "${element(aws_subnet.oddt-data.*.id, count.index)}"
-  route_table_id = "${aws_route_table.oddt-data-routing-table.id}"
+  subnet_id      = "${element(aws_subnet.data_engineering.*.id, count.index)}"
+  route_table_id = "${aws_route_table.data_engineering.id}"
+
+  tags {
+      Name = "${var.name_prefix}"
+      Department = "${var.department}"
+  }
 }
 
 ### Compute
@@ -51,14 +77,19 @@ resource "aws_route_table_association" "oddt-data-routing-table-association" {
 
 ### Security
 
-# TODO: Data VPC ELB security group `resource "aws_security_group" "oddt-data-elb-sg" { ...`
+# TODO: Data VPC ELB security group `resource "aws_security_group" "data_elb_sg" { ...`
 
 # TODO: ECS cluster instance security group
 
 ## ECS
 
-resource "aws_ecs_cluster" "oddt-data" {
-  name = "oddt-data"
+resource "aws_ecs_cluster" "data" {
+  name = "${var.name_prefix}" ## ECS cluster name, not name tag
+
+  tags {
+      Name = "${var.name_prefix}"
+      Department = "${var.department}"
+  }
 }
 
 # TODO: tasks for airflow-webserver and airflow-scheduler `data "template_file" "task_definition" {` .. `resource "aws_ecs_task_definition" "..." {`

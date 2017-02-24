@@ -1,3 +1,11 @@
+variable "name_prefix" {
+  default     = "oddt-data-engineering"
+}
+
+variable "department" {
+  default     = "oddt"
+}
+
 variable "aws_region" {
   default     = "us-east-1"
 }

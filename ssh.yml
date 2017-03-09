@@ -1,0 +1,11 @@
+bucket: oddt-pub-keys
+configurations:
+  bastion:
+    ubuntu:
+      - andrew.w.madonna@gmail.com
+  tunnel_gateway:
+    ubuntu:
+      - andrew.w.madonna@gmail.com
+  airflow:
+    ubuntu:
+      - andrew.w.madonna@gmail.com

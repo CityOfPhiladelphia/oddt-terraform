@@ -17,6 +17,11 @@ variable "key_name" {
   default     = "andrew.madonna"
 }
 
+variable "keytothecity_config" {
+  description = "S3 keytothecity config file"
+  default     = "s3://oddt-pub-keys/keytothecity.yml"
+}
+
 variable "az_count" {
   description = "Number of AZs to cover in a given AWS region"
   default     = "2"

@@ -16,7 +16,7 @@
       ]
     },
     {
-      "Sid": "allowLoggingToCloudWatch",
+      "Sid": "ecsInstanceAllowLoggingToCloudWatch",
       "Effect": "Allow",
       "Action": [
         "logs:CreateLogStream",
@@ -25,6 +25,17 @@
       "Resource": [
         "${container_log_group_arn}",
         "${ecs_log_group_arn}"
+      ]
+    },
+    {
+      "Sid": "allowKeystothecityRead",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::oddt-pub-keys/*",
+        "arn:aws:s3:::eastern-state-test/*"
       ]
     }
   ]

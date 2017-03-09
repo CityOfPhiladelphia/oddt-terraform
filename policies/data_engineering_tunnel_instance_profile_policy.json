@@ -1,0 +1,16 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "allowKeystothecityRead",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::oddt-pub-keys/*",
+        "arn:aws:s3:::eastern-state-test/*"
+      ]
+    }
+  ]
+}

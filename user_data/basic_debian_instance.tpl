@@ -11,5 +11,5 @@ pip3 install --upgrade pip3
 
 pip3 install git+https://github.com/CityOfPhiladelphia/keytothecity.git
 
-keytothecity sync airflow -c ${keytothecity_config}
-keytothecity install_cron airflow -c ${keytothecity_config}
+keytothecity sync ${keytothecity_config_name} -c ${keytothecity_config}
+keytothecity install_cron ${keytothecity_config_name} -c ${keytothecity_config}

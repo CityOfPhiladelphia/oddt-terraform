@@ -1,6 +1,4 @@
 #### TODO: dropbox S3 and permissions
-#### TODO: SSH tunnel gateway
-#### TODO: bastion server ?
 
 #### TODO: Domains?
 #### TODO: SSL?
@@ -10,7 +8,7 @@
 ### Compute
 
 resource "aws_autoscaling_group" "data_engineering_cluster" {
-  name                 = "${var.name_prefix}-asg"
+  name                 = "${var.name_prefix}-ecs-asg"
   vpc_zone_identifier  = ["${aws_subnet.data_engineering.*.id}"]
   min_size             = "${var.data_engineering_asg_min}"
   max_size             = "${var.data_engineering_asg_max}"

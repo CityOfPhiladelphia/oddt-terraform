@@ -1,22 +1,42 @@
 [
-  {
-    "cpu": 256,
-    "essential": true,
-    "image": "${image_url}",
-    "memory": 512,
-    "name": "${container_name}",
-    "portMappings": [
-      {
-        "containerPort": 8080,
-        "hostPort": 8080
-      }
-    ],
-    "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-            "awslogs-group": "${log_group_name}",
-            "awslogs-region": "${log_group_region}"
+    {
+        "cpu": 256,
+        "essential": true,
+        "image": "${image_url}",
+        "memory": 512,
+        "name": "${container_name}",
+        "command": ["webserver"],
+        "essential": true,
+        "environment": [
+            {
+                "name": "AWS_DEFAULT_REGION",
+                "value": "us-east-1"
+            },
+            {
+                "name": "EASTERN_STATE_BUCKET",
+                "value": "eastern-state"
+            },
+            {
+                "name": "EASTERN_STATE_NAME",
+                "value": "airflow"
+            },
+            {
+                "name": "EASTERN_STATE_ENV",
+                "value": "prod"
+            }
+        ],
+        "portMappings": [
+            {
+                "containerPort": 8080,
+                "hostPort": 8080
+            }
+        ],
+        "logConfiguration": {
+            "logDriver": "awslogs",
+            "options": {
+                "awslogs-group": "${log_group_name}",
+                "awslogs-region": "${log_group_region}"
+            }
         }
     }
-  }
 ]

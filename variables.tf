@@ -24,25 +24,25 @@ variable "keytothecity_config" {
 
 variable "az_count" {
   description = "Number of AZs to cover in a given AWS region"
-  default     = "2"
+  default     = "3"
 }
 
-variable "data_engineering_instance_type" {
+variable "data_engineering_ecs_instance_type" {
   description = "Instance type to use for the data engineering service cluster"
   default     = "t2.medium"
 }
 
-variable "data_engineering_asg_min" {
+variable "data_engineering_ecs_asg_min" {
   description = "Minium number of instaces for the data engineering Docker cluster auto scaling group"
   default     = "1"
 }
 
-variable "data_engineering_asg_max" {
+variable "data_engineering_ecs_asg_max" {
   description = "Maximum number of instaces for the data engineering Docker cluster auto scaling group"
   default     = "3"
 }
 
-variable "data_engineering_asg_desired" {
+variable "data_engineering_ecs_asg_desired" {
   description = "Desired number of instaces for the data engineering Docker cluster auto scaling group"
   default     = "2"
 }

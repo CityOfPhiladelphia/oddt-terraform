@@ -51,3 +51,8 @@ resource "aws_route_table_association" "data_routing_table_association" {
   subnet_id      = "${element(aws_subnet.data_engineering.*.id, count.index)}"
   route_table_id = "${aws_route_table.data_engineering.id}"
 }
+
+resource "aws_db_subnet_group" "data_engineering" {
+  name        = "data_engineering"
+  subnet_ids  = ["${aws_subnet.data_engineering.*.id}"]
+}

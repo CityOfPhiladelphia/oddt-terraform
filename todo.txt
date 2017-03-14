@@ -1,0 +1,51 @@
+#### TODO: dropbox S3 and permissions
+
+#### TODO: Domains?
+#### TODO: SSL?
+
+## ECS
+
+# Airflow scheduler
+
+data "template_file" "airflow_scheduler_task_definition" {
+  template = "${file("${path.module}/task_definitions/airflow_webserver.json")}"
+
+  vars {
+    image_url        = "phila_airflow:latest" ## TODO: need to publish image first ## use tags so deployment can go through here
+    container_name   = "airflow_webserver"
+    container_name   = "airflow_scheduler"
+    log_group_region = "${var.aws_region}"
+    log_group_name   = "${aws_cloudwatch_log_group.data_engineering_ecs_cluster.name}"
+  }
+}
+
+resource "aws_ecs_task_definition" "airflow_scheduler_task_definition" {
+  family                = "${name_prefix}-airflow"
+  container_definitions = "${data.template_file.airflow_scheduler_task_definition.rendered}"
+
+  tags {
+      Name = "${var.name_prefix}-ecs-cluster"
+      Department = "${var.department}"
+  }
+}
+
+# TODO: should other properties be used to keep the number of runnings tasks from going over one?
+
+resource "aws_ecs_service" "airflow_scheduler" {
+  name            = "${name_prefix}-airflow-scheduler"
+  cluster         = "${aws_ecs_cluster.data_engineering_cluster.id}"
+  task_definition = "${aws_ecs_task_definition.airflow_scheduler_task_definition.arn}"
+  desired_count   = 1
+  iam_role        = "${aws_iam_role.ecs_service.name}"
+
+  depends_on = [
+    "aws_iam_role_policy.ecs_service",
+  ]
+
+  tags {
+      Name = "${var.name_prefix}-ecs-cluster"
+      Department = "${var.department}"
+  }
+}
+
+# TODO: research placement strategies and constraints

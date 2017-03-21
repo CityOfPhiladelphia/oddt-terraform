@@ -176,3 +176,60 @@ resource "aws_iam_role_policy" "airflow" {
 }
 EOF
 }
+
+## Airflow local dev
+
+resource "aws_iam_user" "airflow_local_dev" {
+  name = "airflow-dev"
+}
+
+resource "aws_iam_role" "airflow_local_dev" {
+  name = "${var.name_prefix}-airflow-local-dev-role"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "${aws_iam_user.airflow_local_dev.arn}"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "airflow_local_dev" {
+  name = "${var.name_prefix}-airflow-local-dev-policy"
+  role = "${aws_iam_role.airflow_local_dev.name}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::eastern-state/airflow"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "kms:Decrypt"
+      ],
+      "Resource": [
+        "${aws_kms_key.airflow_eastern_state_dev.arn}"
+      ]
+    }
+  ]
+}
+EOF
+}

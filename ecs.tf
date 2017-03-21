@@ -8,7 +8,7 @@ data "template_file" "airflow_webserver_task_definition" {
   template = "${file("${path.module}/task_definitions/airflow_webserver.json")}"
 
   vars {
-    image_url        = "cityofphiladelphia/airflow:8590b5c96c59aee3c82c16cc1bc1a63235ef4217"
+    image_url        = "cityofphiladelphia/airflow:f9da176ca907199aed550c39fe0a2ff81f8ce0c2"
     container_name   = "airflow_webserver"
     log_group_region = "${var.aws_region}"
     log_group_name   = "${aws_cloudwatch_log_group.container.name}"
@@ -38,4 +38,30 @@ resource "aws_ecs_service" "airflow_webserver" {
     "aws_iam_role_policy.ecs_service",
     "aws_elb.airflow_webserver",
   ]
+}
+
+# Airflow scheduler
+
+data "template_file" "airflow_scheduler_task_definition" {
+  template = "${file("${path.module}/task_definitions/airflow_scheduler.json")}"
+
+  vars {
+    image_url        = "phila_airflow:f9da176ca907199aed550c39fe0a2ff81f8ce0c2"
+    container_name   = "airflow_scheduler"
+    log_group_region = "${var.aws_region}"
+    log_group_name   = "${aws_cloudwatch_log_group.container.name}"
+  }
+}
+
+resource "aws_ecs_task_definition" "airflow_scheduler_task_definition" {
+  family                = "${var.name_prefix}-airflow"
+  task_role_arn         = "${aws_iam_role.airflow.name}"
+  container_definitions = "${data.template_file.airflow_scheduler_task_definition.rendered}"
+}
+
+resource "aws_ecs_service" "airflow_scheduler" {
+  name            = "${var.name_prefix}-airflow-scheduler"
+  cluster         = "${aws_ecs_cluster.data_engineering_cluster.id}"
+  task_definition = "${aws_ecs_task_definition.airflow_scheduler_task_definition.arn}"
+  desired_count   = 1
 }

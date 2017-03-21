@@ -7,5 +7,5 @@ configurations:
     ubuntu:
       - andrew.w.madonna@gmail.com
   airflow:
-    ubuntu:
+    ec2-user:
       - andrew.w.madonna@gmail.com

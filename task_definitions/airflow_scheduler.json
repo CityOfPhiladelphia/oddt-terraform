@@ -5,7 +5,7 @@
         "image": "${image_url}",
         "memory": 1024,
         "name": "${container_name}",
-        "command": ["webserver"],
+        "command": ["scheduler"],
         "essential": true,
         "environment": [
             {
@@ -23,12 +23,6 @@
             {
                 "name": "EASTERN_STATE_ENV",
                 "value": "prod"
-            }
-        ],
-        "portMappings": [
-            {
-                "containerPort": 8080,
-                "hostPort": 8080
             }
         ],
         "logConfiguration": {

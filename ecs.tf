@@ -17,7 +17,7 @@ data "template_file" "airflow_webserver_task_definition" {
 
 resource "aws_ecs_task_definition" "airflow_webserver_task_definition" {
   family                = "${var.name_prefix}-airflow"
-  task_role_arn         = "${aws_iam_role.airflow.name}"
+  task_role_arn         = "${aws_iam_role.airflow.arn}"
   container_definitions = "${data.template_file.airflow_webserver_task_definition.rendered}"
 }
 
@@ -55,7 +55,7 @@ data "template_file" "airflow_scheduler_task_definition" {
 
 resource "aws_ecs_task_definition" "airflow_scheduler_task_definition" {
   family                = "${var.name_prefix}-airflow"
-  task_role_arn         = "${aws_iam_role.airflow.name}"
+  task_role_arn         = "${aws_iam_role.airflow.arn}"
   container_definitions = "${data.template_file.airflow_scheduler_task_definition.rendered}"
 }
 

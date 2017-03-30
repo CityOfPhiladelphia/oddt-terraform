@@ -12,10 +12,11 @@ resource "aws_vpc" "data_engineering" {
 }
 
 resource "aws_subnet" "data_engineering" {
-  count             = "${var.az_count}"
-  cidr_block        = "${cidrsubnet(aws_vpc.data_engineering.cidr_block, 8, count.index)}"
+  count = "${var.az_count}"
+  cidr_block = "${cidrsubnet(aws_vpc.data_engineering.cidr_block, 8, count.index)}"
   availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
-  vpc_id            = "${aws_vpc.data_engineering.id}"
+  vpc_id = "${aws_vpc.data_engineering.id}"
+  map_public_ip_on_launch = true
 
   tags {
       Name = "${var.name_prefix}-subnet-${data.aws_availability_zones.available.names[count.index]}"

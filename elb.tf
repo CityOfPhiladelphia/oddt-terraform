@@ -10,6 +10,14 @@ resource "aws_elb" "airflow_webserver" {
     lb_protocol = "http"
   }
 
+  listener {
+    instance_port      = 8080
+    instance_protocol  = "http"
+    lb_port            = 443
+    lb_protocol        = "https"
+    ssl_certificate_id = "arn:aws:acm:us-east-1:676612114792:certificate/a8ea1042-fe3e-44cc-9a64-b416909118c1"
+  }
+
   health_check {
     healthy_threshold = 2
     unhealthy_threshold = 2

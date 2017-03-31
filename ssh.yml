@@ -3,9 +3,12 @@ configurations:
   bastion:
     ubuntu:
       - andrew.w.madonna@gmail.com
+      - vito@2b6f76b5b735
   tunnel_gateway:
     ubuntu:
       - andrew.w.madonna@gmail.com
+      - vito@2b6f76b5b735
   airflow:
     ec2-user:
       - andrew.w.madonna@gmail.com
+      - vito@2b6f76b5b735

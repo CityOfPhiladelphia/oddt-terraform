@@ -1,16 +1,9 @@
 ## AMIs
 
 data "aws_ami" "ubuntu" {
-  most_recent = true
-
   filter {
-    name = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"]
-  }
-
-  filter {
-    name = "virtualization-type"
-    values = ["hvm"]
+    name = "image-id"
+    values = ["ami-2757f631"] # locking, this is used by individually launched instances
   }
 
   owners = ["099720109477"] # Canonical
@@ -48,6 +41,14 @@ resource "aws_security_group" "data_engineering_vpc_ssh" {
     protocol    = "tcp"
     from_port   = 22
     to_port     = 22
+
+    self = true
+  }
+
+  ingress {
+    protocol    = "tcp"
+    from_port   = 8080
+    to_port     = 8080
 
     self = true
   }

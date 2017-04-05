@@ -210,18 +210,11 @@ resource "aws_security_group" "data_engineering_airflow_elb" {
   vpc_id = "${aws_vpc.data_engineering.id}"
   name   = "${var.name_prefix}-airflow-elb-sg"
 
-  ingress {
-    protocol    = "tcp"
-    from_port   = 80
-    to_port     = 80
-    cidr_blocks = ["10.0.0.0/16"] # from within VPC
-  }
-
-  ingress {
+    ingress {
     protocol    = "tcp"
     from_port   = 443
     to_port     = 443
-    cidr_blocks = ["10.0.0.0/16"] # from within VPC
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
@@ -248,6 +241,8 @@ resource "aws_security_group" "data_engineering_ecs_instance" {
     protocol  = "tcp"
     from_port = 8080
     to_port   = 8080
+
+    cidr_blocks = ["10.0.0.0/16"]
 
     security_groups = [
       "${aws_security_group.data_engineering_airflow_elb.id}",

@@ -4,13 +4,6 @@ resource "aws_elb" "airflow_webserver" {
   security_groups = ["${aws_security_group.data_engineering_airflow_elb.id}"]
 
   listener {
-    instance_port = 8080
-    instance_protocol = "http"
-    lb_port = 80 ## TODO: ssl
-    lb_protocol = "http"
-  }
-
-  listener {
     instance_port      = 8080
     instance_protocol  = "http"
     lb_port            = 443

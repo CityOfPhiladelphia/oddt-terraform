@@ -8,7 +8,7 @@ data "template_file" "airflow_webserver_task_definition" {
   template = "${file("${path.module}/task_definitions/airflow_webserver.json")}"
 
   vars {
-    image_url        = "cityofphiladelphia/airflow:5db43ebba501ca82f5e2cd6c3b611045247fce80"
+    image_url        = "cityofphiladelphia/airflow:a0ba066cb6583f755c42a797affb953af05673bb"
     container_name   = "airflow_webserver"
     log_group_region = "${var.aws_region}"
     log_group_name   = "${aws_cloudwatch_log_group.container.name}"

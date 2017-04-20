@@ -161,7 +161,8 @@ resource "aws_iam_role_policy" "airflow" {
         "s3:PutObject"
       ],
       "Resource": [
-        "arn:aws:s3:::phl-data-dropbox/*"
+        "arn:aws:s3:::phl-data-dropbox/*",
+        "arn:aws:s3:::phl-etl-staging/*"
       ]
     },
     {
@@ -208,7 +209,8 @@ resource "aws_iam_user_policy" "airflow_local_dev" {
         "s3:PutObject"
       ],
       "Resource": [
-        "arn:aws:s3:::phl-data-dropbox-dev/*"
+        "arn:aws:s3:::phl-data-dropbox-dev/*",
+        "arn:aws:s3:::phl-etl-staging-dev/*"
       ]
     },
     {

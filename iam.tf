@@ -158,11 +158,21 @@ resource "aws_iam_role_policy" "airflow" {
       "Effect": "Allow",
       "Action": [
         "s3:GetObject",
-        "s3:PutObject"
+        "s3:PutObject",
+        "s3:ListBucket"
       ],
       "Resource": [
         "arn:aws:s3:::phl-data-dropbox/*",
         "arn:aws:s3:::phl-etl-staging/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::phl-etl-staging"
       ]
     },
     {
@@ -211,6 +221,15 @@ resource "aws_iam_user_policy" "airflow_local_dev" {
       "Resource": [
         "arn:aws:s3:::phl-data-dropbox-dev/*",
         "arn:aws:s3:::phl-etl-staging-dev/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::phl-etl-staging-dev"
       ]
     },
     {

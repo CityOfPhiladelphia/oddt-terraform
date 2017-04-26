@@ -33,3 +33,12 @@ resource "aws_s3_bucket" "phl-etl-staging-dev" {
     Department = "${var.department}"
   }
 }
+
+resource "aws_s3_bucket" "phl-schemas" {
+  bucket = "phl-schemas"
+  acl = "private"
+
+  tags {
+    Department = "${var.department}"
+  }
+}

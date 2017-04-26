@@ -172,7 +172,17 @@ resource "aws_iam_role_policy" "airflow" {
         "s3:ListBucket"
       ],
       "Resource": [
-        "arn:aws:s3:::phl-etl-staging"
+        "arn:aws:s3:::phl-etl-staging",
+        "arn:aws:s3:::phl-schemas"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::phl-schemas/*"
       ]
     },
     {
@@ -229,7 +239,17 @@ resource "aws_iam_user_policy" "airflow_local_dev" {
         "s3:ListBucket"
       ],
       "Resource": [
-        "arn:aws:s3:::phl-etl-staging-dev"
+        "arn:aws:s3:::phl-etl-staging-dev",
+        "arn:aws:s3:::phl-schemas"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::phl-schemas/*"
       ]
     },
     {

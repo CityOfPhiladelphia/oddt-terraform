@@ -8,6 +8,7 @@ configurations:
     ubuntu:
       - andrew.w.madonna@gmail.com
       - vito@2b6f76b5b735
+      - phl-airflowdev
   airflow:
     ec2-user:
       - andrew.w.madonna@gmail.com

@@ -8,7 +8,7 @@ data "template_file" "airflow_webserver_task_definition" {
   template = "${file("${path.module}/task_definitions/airflow_webserver.json")}"
 
   vars {
-    image_url        = "cityofphiladelphia/airflow:3ff6bad8271f3076b18521c674b51363cf388672-v2"
+    image_url        = "cityofphiladelphia/airflow:4d207eaecb6067c077e7de2477fa285045343d1e"
     container_name   = "airflow_webserver"
     log_group_region = "${var.aws_region}"
     log_group_name   = "${aws_cloudwatch_log_group.container.name}"
@@ -46,7 +46,7 @@ data "template_file" "airflow_scheduler_task_definition" {
   template = "${file("${path.module}/task_definitions/airflow_scheduler.json")}"
 
   vars {
-    image_url        = "cityofphiladelphia/airflow:3ff6bad8271f3076b18521c674b51363cf388672-v2"
+    image_url        = "cityofphiladelphia/airflow:4d207eaecb6067c077e7de2477fa285045343d1e"
     container_name   = "airflow_scheduler"
     log_group_region = "${var.aws_region}"
     log_group_name   = "${aws_cloudwatch_log_group.container.name}"

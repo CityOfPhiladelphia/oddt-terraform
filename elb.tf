@@ -8,7 +8,7 @@ resource "aws_elb" "airflow_webserver" {
     instance_protocol  = "http"
     lb_port            = 443
     lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:acm:us-east-1:676612114792:certificate/a8ea1042-fe3e-44cc-9a64-b416909118c1"
+    ssl_certificate_id = "arn:aws:acm:us-east-1:676612114792:certificate/e5f3e671-6f0c-4204-8363-b0504dbd4d5f"
   }
 
   health_check {

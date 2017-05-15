@@ -47,6 +47,13 @@ resource "aws_security_group" "data_engineering_vpc_ssh" {
 
   ingress {
     protocol    = "tcp"
+    from_port   = 22
+    to_port     = 22
+    cidr_blocks = ["76.161.206.10/32"]
+  }
+
+  ingress {
+    protocol    = "tcp"
     from_port   = 8080
     to_port     = 8080
 

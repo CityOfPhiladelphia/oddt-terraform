@@ -5,7 +5,7 @@
         "image": "${image_url}",
         "memory": 1024,
         "name": "${container_name}",
-        "command": ["scheduler"],
+        "command": ["scheduler", "-n", "50"],
         "essential": true,
         "environment": [
             {

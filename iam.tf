@@ -157,6 +157,17 @@ resource "aws_iam_role_policy" "airflow" {
     {
       "Effect": "Allow",
       "Action": [
+        "batch:listJobs",
+        "batch:describeJobs",
+        "batch:submitJob"
+      ],
+      "Resource": [
+        "arn:aws:batch:*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
         "s3:GetObject",
         "s3:PutObject"
       ],
@@ -221,6 +232,17 @@ resource "aws_iam_user_policy" "airflow_local_dev" {
 {
   "Version": "2012-10-17",
   "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "batch:listJobs",
+        "batch:describeJobs",
+        "batch:submitJob"
+      ],
+      "Resource": [
+        "arn:aws:batch:*"
+      ]
+    },
     {
       "Effect": "Allow",
       "Action": [

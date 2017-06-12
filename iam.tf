@@ -162,7 +162,7 @@ resource "aws_iam_role_policy" "airflow" {
         "batch:submitJob"
       ],
       "Resource": [
-        "arn:aws:batch:*"
+        "*"
       ]
     },
     {
@@ -201,7 +201,8 @@ resource "aws_iam_role_policy" "airflow" {
         "s3:GetObject"
       ],
       "Resource": [
-        "arn:aws:s3:::eastern-state/airflow"
+        "arn:aws:s3:::eastern-state/airflow",
+        "arn:aws:s3:::eastern-state/taskflow"
       ]
     },
     {
@@ -210,7 +211,8 @@ resource "aws_iam_role_policy" "airflow" {
         "kms:Decrypt"
       ],
       "Resource": [
-        "${aws_kms_key.airflow_eastern_state_prod.arn}"
+        "${aws_kms_key.airflow_eastern_state_prod.arn}",
+        "${aws_kms_key.taskflow_eastern_state_prod.arn}"
       ]
     }
   ]
@@ -240,7 +242,7 @@ resource "aws_iam_user_policy" "airflow_local_dev" {
         "batch:submitJob"
       ],
       "Resource": [
-        "arn:aws:batch:*"
+        "*"
       ]
     },
     {
@@ -279,7 +281,8 @@ resource "aws_iam_user_policy" "airflow_local_dev" {
         "s3:GetObject"
       ],
       "Resource": [
-        "arn:aws:s3:::eastern-state/airflow"
+        "arn:aws:s3:::eastern-state/airflow",
+        "arn:aws:s3:::eastern-state/taskflow"
       ]
     },
     {
@@ -288,7 +291,8 @@ resource "aws_iam_user_policy" "airflow_local_dev" {
         "kms:Decrypt"
       ],
       "Resource": [
-        "${aws_kms_key.airflow_eastern_state_dev.arn}"
+        "${aws_kms_key.airflow_eastern_state_dev.arn}",
+        "${aws_kms_key.taskflow_eastern_state_dev.arn}"
       ]
     }
   ]

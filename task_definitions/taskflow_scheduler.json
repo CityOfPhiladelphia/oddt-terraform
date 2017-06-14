@@ -1,11 +1,15 @@
 [
     {
-        "cpu": 1024,
+        "cpu": 512,
         "essential": true,
         "image": "${image_url}",
         "memory": 1024,
         "name": "${container_name}",
-        "command": ["webserver"],
+        "command": ["python3",
+                    "phila_taskflow/main.py",
+                    "scheduler",
+                    "--num-runs",
+                    "200"],
         "essential": true,
         "environment": [
             {
@@ -18,17 +22,11 @@
             },
             {
                 "name": "EASTERN_STATE_NAME",
-                "value": "airflow"
+                "value": "taskflow"
             },
             {
                 "name": "EASTERN_STATE_ENV",
                 "value": "prod"
-            }
-        ],
-        "portMappings": [
-            {
-                "containerPort": 8080,
-                "hostPort": 8080
             }
         ],
         "logConfiguration": {

@@ -31,6 +31,7 @@ data "template_file" "data_engineering_cluster_instance_profile" {
   vars {
     container_log_group_arn = "${aws_cloudwatch_log_group.container.arn}"
     ecs_log_group_arn = "${aws_cloudwatch_log_group.ecs.arn}"
+    taskflow_scheduler_log_group_arn = "${aws_cloudwatch_log_group.taskflow_scheduler.arn}"
   }
 }
 
@@ -124,10 +125,10 @@ resource "aws_iam_role_policy" "ecs_service" {
 EOF
 }
 
-## Airflow containers
+## Taskflow containers
 
-resource "aws_iam_role" "airflow" {
-  name = "${var.name_prefix}-airflow-role"
+resource "aws_iam_role" "taskflow" {
+  name = "${var.name_prefix}-taskflow-role"
 
   assume_role_policy = <<EOF
 {
@@ -146,9 +147,9 @@ resource "aws_iam_role" "airflow" {
 EOF
 }
 
-resource "aws_iam_role_policy" "airflow" {
-  name = "${var.name_prefix}-airflow-policy"
-  role = "${aws_iam_role.airflow.name}"
+resource "aws_iam_role_policy" "taskflow" {
+  name = "${var.name_prefix}-taskflow-policy"
+  role = "${aws_iam_role.taskflow.name}"
 
   policy = <<EOF
 {
@@ -201,7 +202,6 @@ resource "aws_iam_role_policy" "airflow" {
         "s3:GetObject"
       ],
       "Resource": [
-        "arn:aws:s3:::eastern-state/airflow",
         "arn:aws:s3:::eastern-state/taskflow"
       ]
     },
@@ -211,7 +211,6 @@ resource "aws_iam_role_policy" "airflow" {
         "kms:Decrypt"
       ],
       "Resource": [
-        "${aws_kms_key.airflow_eastern_state_prod.arn}",
         "${aws_kms_key.taskflow_eastern_state_prod.arn}"
       ]
     }
@@ -220,15 +219,15 @@ resource "aws_iam_role_policy" "airflow" {
 EOF
 }
 
-## Airflow local dev
+## Taskflow local dev
 
-resource "aws_iam_user" "airflow_local_dev" {
-  name = "airflow-dev"
+resource "aws_iam_user" "taskflow_local_dev" {
+  name = "taskflow-dev"
 }
 
-resource "aws_iam_user_policy" "airflow_local_dev" {
-  name = "${var.name_prefix}-airflow-local-dev-policy"
-  user = "${aws_iam_user.airflow_local_dev.name}"
+resource "aws_iam_user_policy" "taskflow_local_dev" {
+  name = "${var.name_prefix}-taskflow-local-dev-policy"
+  user = "${aws_iam_user.taskflow_local_dev.name}"
 
   policy = <<EOF
 {
@@ -281,7 +280,6 @@ resource "aws_iam_user_policy" "airflow_local_dev" {
         "s3:GetObject"
       ],
       "Resource": [
-        "arn:aws:s3:::eastern-state/airflow",
         "arn:aws:s3:::eastern-state/taskflow"
       ]
     },
@@ -291,7 +289,6 @@ resource "aws_iam_user_policy" "airflow_local_dev" {
         "kms:Decrypt"
       ],
       "Resource": [
-        "${aws_kms_key.airflow_eastern_state_dev.arn}",
         "${aws_kms_key.taskflow_eastern_state_dev.arn}"
       ]
     }

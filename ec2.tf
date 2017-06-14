@@ -213,33 +213,6 @@ resource "aws_launch_configuration" "data_engineering_cluster" {
   }
 }
 
-resource "aws_security_group" "data_engineering_airflow_elb" {
-  vpc_id = "${aws_vpc.data_engineering.id}"
-  name   = "${var.name_prefix}-airflow-elb-sg"
-
-    ingress {
-    protocol    = "tcp"
-    from_port   = 443
-    to_port     = 443
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port = 0
-    to_port   = 0
-    protocol  = "-1"
-
-    cidr_blocks = [
-      "0.0.0.0/0",
-    ]
-  }
-
-  tags {
-      Name = "${var.name_prefix}-airflow-elb-sg"
-      Department = "${var.department}"
-  }
-}
-
 resource "aws_security_group" "data_engineering_ecs_instance" {
   vpc_id      = "${aws_vpc.data_engineering.id}"
   name        = "${var.name_prefix}-ecs-instance-sg"
@@ -250,10 +223,6 @@ resource "aws_security_group" "data_engineering_ecs_instance" {
     to_port   = 8080
 
     cidr_blocks = ["10.0.0.0/16"]
-
-    security_groups = [
-      "${aws_security_group.data_engineering_airflow_elb.id}",
-    ]
   }
 
   egress {

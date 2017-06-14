@@ -1,6 +1,0 @@
-#### TODO: dropbox S3 and permissions
-
-#### TODO: Domains?
-#### TODO: SSL?
-
-#### TODO: research placement strategies and constraints

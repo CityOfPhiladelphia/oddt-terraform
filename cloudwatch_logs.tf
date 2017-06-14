@@ -17,3 +17,12 @@ resource "aws_cloudwatch_log_group" "container" {
       Department = "${var.department}"
   }
 }
+
+resource "aws_cloudwatch_log_group" "taskflow_scheduler" {
+  name = "${var.name_prefix}/taskflow-scheduler"
+
+  tags {
+      Name = "${var.name_prefix}-taskflow-scheduler"
+      Department = "${var.department}"
+  }
+}

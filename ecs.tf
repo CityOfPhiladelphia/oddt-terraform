@@ -2,66 +2,31 @@ resource "aws_ecs_cluster" "data_engineering_cluster" {
   name = "${var.name_prefix}-ecs-cluster"
 }
 
-# Airflow webserver
+# Taskflow scheduler
 
-data "template_file" "airflow_webserver_task_definition" {
-  template = "${file("${path.module}/task_definitions/airflow_webserver.json")}"
-
-  vars {
-    image_url        = "cityofphiladelphia/airflow:separate-files-test"
-    container_name   = "airflow_webserver"
-    log_group_region = "${var.aws_region}"
-    log_group_name   = "${aws_cloudwatch_log_group.container.name}"
-  }
-}
-
-resource "aws_ecs_task_definition" "airflow_webserver_task_definition" {
-  family                = "${var.name_prefix}-airflow-webserver"
-  task_role_arn         = "${aws_iam_role.airflow.arn}"
-  container_definitions = "${data.template_file.airflow_webserver_task_definition.rendered}"
-}
-
-resource "aws_ecs_service" "airflow_webserver" {
-  name            = "${var.name_prefix}-airflow-webserver"
-  cluster         = "${aws_ecs_cluster.data_engineering_cluster.id}"
-  task_definition = "${aws_ecs_task_definition.airflow_webserver_task_definition.arn}"
-  desired_count   = 2
-  iam_role        = "${aws_iam_role.ecs_service.name}"
-
-  load_balancer {
-    elb_name = "${aws_elb.airflow_webserver.id}"
-    container_name   = "airflow_webserver"
-    container_port   = "8080"
-  }
-
-  depends_on = [
-    "aws_iam_role_policy.ecs_service",
-    "aws_elb.airflow_webserver",
-  ]
-}
-
-# Airflow scheduler
-
-data "template_file" "airflow_scheduler_task_definition" {
-  template = "${file("${path.module}/task_definitions/airflow_scheduler.json")}"
+data "template_file" "taskflow_scheduler_task_definition" {
+  template = "${file("${path.module}/task_definitions/taskflow_scheduler.json")}"
 
   vars {
-    image_url        = "cityofphiladelphia/airflow:separate-files-test"
-    container_name   = "airflow_scheduler"
+    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/taskflow-scheduler:c2eb37318afd92a6d4778bc0f86bcfc594268b1d"
+    container_name   = "taskflow_scheduler"
     log_group_region = "${var.aws_region}"
-    log_group_name   = "${aws_cloudwatch_log_group.container.name}"
+    log_group_name   = "${aws_cloudwatch_log_group.taskflow_scheduler.name}"
   }
 }
 
-resource "aws_ecs_task_definition" "airflow_scheduler_task_definition" {
-  family                = "${var.name_prefix}-airflow-scheduler"
-  task_role_arn         = "${aws_iam_role.airflow.arn}"
-  container_definitions = "${data.template_file.airflow_scheduler_task_definition.rendered}"
+resource "aws_ecs_task_definition" "taskflow_scheduler_task_definition" {
+  family                = "${var.name_prefix}-taskflow-scheduler"
+  task_role_arn         = "${aws_iam_role.taskflow.arn}"
+  container_definitions = "${data.template_file.taskflow_scheduler_task_definition.rendered}"
 }
 
-resource "aws_ecs_service" "airflow_scheduler" {
-  name            = "${var.name_prefix}-airflow-scheduler"
+resource "aws_ecs_service" "taskflow_scheduler" {
+  name            = "${var.name_prefix}-taskflow-scheduler"
   cluster         = "${aws_ecs_cluster.data_engineering_cluster.id}"
-  task_definition = "${aws_ecs_task_definition.airflow_scheduler_task_definition.arn}"
+  task_definition = "${aws_ecs_task_definition.taskflow_scheduler_task_definition.arn}"
   desired_count   = 1
+  # we only want exactly one scheduler running at once
+  deployment_maximum_percent = 100
+  deployment_minimum_healthy_percent = 0
 }

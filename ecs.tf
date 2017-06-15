@@ -8,7 +8,7 @@ data "template_file" "taskflow_scheduler_task_definition" {
   template = "${file("${path.module}/task_definitions/taskflow_scheduler.json")}"
 
   vars {
-    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/taskflow-scheduler:c2eb37318afd92a6d4778bc0f86bcfc594268b1d"
+    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/taskflow-scheduler:e3d87051fe4eef787129f36b98dd35d266e597d3"
     container_name   = "taskflow_scheduler"
     log_group_region = "${var.aws_region}"
     log_group_name   = "${aws_cloudwatch_log_group.taskflow_scheduler.name}"

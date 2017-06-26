@@ -4,12 +4,15 @@
         "image": "${image_url}",
         "memory": 1024,
         "name": "${container_name}",
-        "command": ["python3",
-                    "phila_taskflow/main.py",
-                    "scheduler",
-                    "--num-runs",
-                    "200"],
+        "command": ["server"],
         "essential": true,
+        "portMappings": [
+            {
+              "hostPort": 5000,
+              "containerPort": 5000,
+              "protocol": "tcp"
+            }
+        ],
         "environment": [
             {
                 "name": "AWS_DEFAULT_REGION",
@@ -21,7 +24,7 @@
             },
             {
                 "name": "EASTERN_STATE_NAME",
-                "value": "taskflow"
+                "value": "redash"
             },
             {
                 "name": "EASTERN_STATE_ENV",

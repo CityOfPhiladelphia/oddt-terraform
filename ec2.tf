@@ -255,3 +255,48 @@ resource "aws_security_group" "data_engineering_rds" {
       Department = "${var.department}"
   }
 }
+
+resource "aws_security_group" "data_engineering_redis" {
+  vpc_id      = "${aws_vpc.data_engineering.id}"
+  name        = "${var.name_prefix}-redis-sg"
+
+  ingress {
+    protocol  = "tcp"
+    from_port = 6379
+    to_port   = 6379
+
+    cidr_blocks = ["10.0.0.0/16"] # from within VPC
+  }
+
+  tags {
+      Name = "${var.name_prefix}-redis-sg"
+      Department = "${var.department}"
+  }
+}
+
+resource "aws_security_group" "data_engineering_redash_elb" {
+  vpc_id = "${aws_vpc.data_engineering.id}"
+  name   = "${var.name_prefix}-redash-elb-sg"
+
+  ingress {
+    protocol    = "tcp"
+    from_port   = 443
+    to_port     = 443
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+
+    cidr_blocks = [
+      "0.0.0.0/0",
+    ]
+  }
+
+  tags {
+      Name = "${var.name_prefix}-airflow-elb-sg"
+      Department = "${var.department}"
+  }
+}

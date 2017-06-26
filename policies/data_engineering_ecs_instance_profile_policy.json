@@ -31,7 +31,8 @@
         "arn:aws:logs:us-east-1:676612114792:log-group:/aws/batch/job:*",
         "${container_log_group_arn}",
         "${ecs_log_group_arn}",
-        "${taskflow_scheduler_log_group_arn}"
+        "${taskflow_scheduler_log_group_arn}",
+        "${redash_log_group_arn}"
       ]
     },
     {

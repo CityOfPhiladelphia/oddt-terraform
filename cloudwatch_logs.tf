@@ -26,3 +26,12 @@ resource "aws_cloudwatch_log_group" "taskflow_scheduler" {
       Department = "${var.department}"
   }
 }
+
+resource "aws_cloudwatch_log_group" "redash_webserver" {
+  name = "${var.name_prefix}/redash-webserver"
+
+  tags {
+      Name = "${var.name_prefix}-redash-webserver"
+      Department = "${var.department}"
+  }
+}

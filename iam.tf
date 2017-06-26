@@ -32,6 +32,7 @@ data "template_file" "data_engineering_cluster_instance_profile" {
     container_log_group_arn = "${aws_cloudwatch_log_group.container.arn}"
     ecs_log_group_arn = "${aws_cloudwatch_log_group.ecs.arn}"
     taskflow_scheduler_log_group_arn = "${aws_cloudwatch_log_group.taskflow_scheduler.arn}"
+    redash_log_group_arn = "${aws_cloudwatch_log_group.redash_webserver.arn}"
   }
 }
 
@@ -290,6 +291,59 @@ resource "aws_iam_user_policy" "taskflow_local_dev" {
       ],
       "Resource": [
         "${aws_kms_key.taskflow_eastern_state_dev.arn}"
+      ]
+    }
+  ]
+}
+EOF
+}
+
+## Redash containers
+
+resource "aws_iam_role" "redash" {
+  name = "${var.name_prefix}-redash-role"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "redash" {
+  name = "${var.name_prefix}-redash-policy"
+  role = "${aws_iam_role.redash.name}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::eastern-state/redash"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "kms:Decrypt"
+      ],
+      "Resource": [
+        "${aws_kms_key.redash_eastern_state_prod.arn}"
       ]
     }
   ]

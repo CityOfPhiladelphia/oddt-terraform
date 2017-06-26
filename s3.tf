@@ -42,3 +42,31 @@ resource "aws_s3_bucket" "phl-schemas" {
     Department = "${var.department}"
   }
 }
+
+resource "aws_s3_bucket" "phl-data-build-assets" {
+  bucket = "phl-data-build-assets"
+  acl = "private"
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal":{
+        "AWS": "arn:aws:iam::676612114792:root"
+      },
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::phl-data-build-assets/*"
+      ]
+    }
+  ]
+}
+EOF
+
+  tags {
+    Department = "${var.department}"
+  }
+}

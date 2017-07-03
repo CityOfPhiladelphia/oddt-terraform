@@ -32,6 +32,7 @@ data "template_file" "data_engineering_cluster_instance_profile" {
     container_log_group_arn = "${aws_cloudwatch_log_group.container.arn}"
     ecs_log_group_arn = "${aws_cloudwatch_log_group.ecs.arn}"
     taskflow_scheduler_log_group_arn = "${aws_cloudwatch_log_group.taskflow_scheduler.arn}"
+    taskflow_api_server_log_group_arn = "${aws_cloudwatch_log_group.taskflow_api_server.arn}"
     redash_log_group_arn = "${aws_cloudwatch_log_group.redash_webserver.arn}"
   }
 }

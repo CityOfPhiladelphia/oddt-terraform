@@ -1,0 +1,47 @@
+[
+    {
+        "cpu": 256,
+        "image": "${image_url}",
+        "memory": 1024,
+        "name": "${container_name}",
+        "command": ["python3",
+                    "phila_taskflow/main.py",
+                    "api_server",
+                    "--worker-class",
+                    "eventlet",
+                    "--prod"],
+        "essential": true,
+        "portMappings": [
+            {
+              "hostPort": 5000,
+              "containerPort": 5000,
+              "protocol": "tcp"
+            }
+        ],
+        "environment": [
+            {
+                "name": "AWS_DEFAULT_REGION",
+                "value": "us-east-1"
+            },
+            {
+                "name": "EASTERN_STATE_BUCKET",
+                "value": "eastern-state"
+            },
+            {
+                "name": "EASTERN_STATE_NAME",
+                "value": "taskflow"
+            },
+            {
+                "name": "EASTERN_STATE_ENV",
+                "value": "prod"
+            }
+        ],
+        "logConfiguration": {
+            "logDriver": "awslogs",
+            "options": {
+                "awslogs-group": "${log_group_name}",
+                "awslogs-region": "${log_group_region}"
+            }
+        }
+    }
+]

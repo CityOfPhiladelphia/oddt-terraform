@@ -32,6 +32,7 @@
         "${container_log_group_arn}",
         "${ecs_log_group_arn}",
         "${taskflow_scheduler_log_group_arn}",
+        "${taskflow_api_server_log_group_arn}",
         "${redash_log_group_arn}"
       ]
     },

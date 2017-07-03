@@ -31,6 +31,44 @@ resource "aws_ecs_service" "taskflow_scheduler" {
   deployment_minimum_healthy_percent = 0
 }
 
+# Taskflow API server
+
+data "template_file" "taskflow_api_server_task_definition" {
+  template = "${file("${path.module}/task_definitions/taskflow_api_server.json")}"
+
+  vars {
+    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/taskflow-api-server:eadd73c7fa6eb9d7cfcbe89a4859fa824df99eb1"
+    container_name   = "taskflow_api_server"
+    log_group_region = "${var.aws_region}"
+    log_group_name   = "${aws_cloudwatch_log_group.taskflow_api_server.name}"
+  }
+}
+
+resource "aws_ecs_task_definition" "taskflow_api_server_task_definition" {
+  family                = "${var.name_prefix}-taskflow-api-server"
+  task_role_arn         = "${aws_iam_role.taskflow.arn}"
+  container_definitions = "${data.template_file.taskflow_api_server_task_definition.rendered}"
+}
+
+resource "aws_ecs_service" "taskflow_api_server" {
+  name            = "${var.name_prefix}-taskflow-api-server"
+  cluster         = "${aws_ecs_cluster.data_engineering_cluster.id}"
+  task_definition = "${aws_ecs_task_definition.taskflow_api_server_task_definition.arn}"
+  iam_role        = "${aws_iam_role.ecs_service.name}"
+  desired_count   = 2
+
+  load_balancer {
+    elb_name = "${aws_elb.taskflow_api_server.id}"
+    container_name   = "taskflow_api_server"
+    container_port   = "5000"
+  }
+
+  depends_on = [
+    "aws_iam_role_policy.ecs_service",
+    "aws_elb.taskflow_api_server",
+  ]
+}
+
 # Redash
 
 data "template_file" "redash_webserver_task_definition" {

@@ -2,23 +2,13 @@
     {
         "cpu": 256,
         "image": "${image_url}",
-        "memory": 1024,
-        "name": "api_gateway_api",
+        "memory": 512,
+        "name": "api_gateway_api_worker",
         "command": ["api_gateway",
-                    "api_server",
-                    "--bind-port",
-                    "5001",
-                    "--worker-class",
-                    "eventlet",
-                    "--prod"],
+                    "worker",
+                    "--num-runs",
+                    "1000"],
         "essential": true,
-        "portMappings": [
-            {
-              "hostPort": 5001,
-              "containerPort": 5001,
-              "protocol": "tcp"
-            }
-        ],
         "environment": [
             {
                 "name": "AWS_DEFAULT_REGION",

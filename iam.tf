@@ -33,6 +33,7 @@ data "template_file" "data_engineering_cluster_instance_profile" {
     ecs_log_group_arn = "${aws_cloudwatch_log_group.ecs.arn}"
     taskflow_scheduler_log_group_arn = "${aws_cloudwatch_log_group.taskflow_scheduler.arn}"
     taskflow_api_server_log_group_arn = "${aws_cloudwatch_log_group.taskflow_api_server.arn}"
+    api_gateway_api_log_group_arn = "${aws_cloudwatch_log_group.api_gateway_api.arn}"
     redash_log_group_arn = "${aws_cloudwatch_log_group.redash_webserver.arn}"
   }
 }
@@ -345,6 +346,70 @@ resource "aws_iam_role_policy" "redash" {
       ],
       "Resource": [
         "${aws_kms_key.redash_eastern_state_prod.arn}"
+      ]
+    }
+  ]
+}
+EOF
+}
+
+## API Gateway API containers
+
+resource "aws_iam_role" "api_gateway_api" {
+  name = "${var.name_prefix}-api-gateway-api-role"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "api_gateway_api" {
+  name = "${var.name_prefix}-api-gateway-api-policy"
+  role = "${aws_iam_role.api_gateway_api.name}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::eastern-state/api-gateway-api"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "kms:Decrypt"
+      ],
+      "Resource": [
+        "${aws_kms_key.api_gateway_api_eastern_state_prod.arn}"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "sqs:ReceiveMessage",
+        "sqs:DeleteMessage",
+        "sqs:DeleteMessageBatch"
+      ],
+      "Resource": [
+        "${aws_sqs_queue.api_gateway.arn}"
       ]
     }
   ]

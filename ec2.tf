@@ -49,7 +49,10 @@ resource "aws_security_group" "data_engineering_vpc_ssh" {
     protocol    = "tcp"
     from_port   = 22
     to_port     = 22
-    cidr_blocks = ["76.161.206.10/32"]
+    cidr_blocks = [
+      "76.161.206.10/32",
+      "71.175.48.144/32"
+    ]
   }
 
   ingress {
@@ -225,6 +228,14 @@ resource "aws_security_group" "data_engineering_ecs_instance" {
     cidr_blocks = ["10.0.0.0/16"]
   }
 
+  ingress {
+    protocol  = "tcp"
+    from_port = 5001
+    to_port   = 5001
+
+    cidr_blocks = ["10.0.0.0/16"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -324,6 +335,33 @@ resource "aws_security_group" "data_engineering_taskflow_api_server_elb" {
 
   tags {
       Name = "${var.name_prefix}-taskflow-api-server-elb-sg"
+      Department = "${var.department}"
+  }
+}
+
+resource "aws_security_group" "data_engineering_api_gateway_api_elb" {
+  vpc_id = "${aws_vpc.data_engineering.id}"
+  name   = "${var.name_prefix}-api-gateway-api-elb-sg"
+
+  ingress {
+    protocol    = "tcp"
+    from_port   = 80
+    to_port     = 80
+    cidr_blocks = ["10.0.0.0/16"]
+  }
+
+  egress {
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+
+    cidr_blocks = [
+      "0.0.0.0/0",
+    ]
+  }
+
+  tags {
+      Name = "${var.name_prefix}-api-gateway-api-elb-sg"
       Department = "${var.department}"
   }
 }

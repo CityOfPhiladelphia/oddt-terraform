@@ -36,6 +36,15 @@ resource "aws_cloudwatch_log_group" "taskflow_api_server" {
   }
 }
 
+resource "aws_cloudwatch_log_group" "api_gateway_api" {
+  name = "${var.name_prefix}/api-gateway-api"
+
+  tags {
+      Name = "${var.name_prefix}-api-gateway-api"
+      Department = "${var.department}"
+  }
+}
+
 resource "aws_cloudwatch_log_group" "redash_webserver" {
   name = "${var.name_prefix}/redash-webserver"
 

@@ -1,15 +1,19 @@
 [
     {
-        "cpu": 512,
+        "cpu": 256,
         "image": "${image_url}",
-        "memory": 512,
-        "name": "${container_name}",
-        "command": ["python3",
-                    "phila_taskflow/main.py",
-                    "scheduler",
-                    "--num-runs",
-                    "200"],
+        "memory": 1024,
+        "name": "api_gateway_gateway",
+        "command": ["node",
+                    "gateway.js"],
         "essential": true,
+        "portMappings": [
+            {
+              "hostPort": 5002,
+              "containerPort": 5002,
+              "protocol": "tcp"
+            }
+        ],
         "environment": [
             {
                 "name": "AWS_DEFAULT_REGION",
@@ -21,11 +25,15 @@
             },
             {
                 "name": "EASTERN_STATE_NAME",
-                "value": "taskflow"
+                "value": "api-gateway-gateway"
             },
             {
                 "name": "EASTERN_STATE_ENV",
                 "value": "prod"
+            },
+            {
+                "name": "GATEWAY_HTTP_PORT",
+                "value": "5002"
             }
         ],
         "logConfiguration": {

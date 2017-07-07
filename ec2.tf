@@ -236,6 +236,14 @@ resource "aws_security_group" "data_engineering_ecs_instance" {
     cidr_blocks = ["10.0.0.0/16"]
   }
 
+  ingress {
+    protocol  = "tcp"
+    from_port = 5002
+    to_port   = 5002
+
+    cidr_blocks = ["10.0.0.0/16"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -362,6 +370,33 @@ resource "aws_security_group" "data_engineering_api_gateway_api_elb" {
 
   tags {
       Name = "${var.name_prefix}-api-gateway-api-elb-sg"
+      Department = "${var.department}"
+  }
+}
+
+resource "aws_security_group" "data_engineering_api_gateway_gateway_elb" {
+  vpc_id = "${aws_vpc.data_engineering.id}"
+  name   = "${var.name_prefix}-api-gateway-gateway-elb-sg"
+
+  ingress {
+    protocol    = "tcp"
+    from_port   = 443
+    to_port     = 443
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+
+    cidr_blocks = [
+      "0.0.0.0/0",
+    ]
+  }
+
+  tags {
+      Name = "${var.name_prefix}-api-gateway-gateway-elb-sg"
       Department = "${var.department}"
   }
 }

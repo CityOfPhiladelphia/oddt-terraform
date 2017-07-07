@@ -45,6 +45,15 @@ resource "aws_cloudwatch_log_group" "api_gateway_api" {
   }
 }
 
+resource "aws_cloudwatch_log_group" "api_gateway_gateway" {
+  name = "${var.name_prefix}/api-gateway-gateway"
+
+  tags {
+      Name = "${var.name_prefix}-api-gateway-gateway"
+      Department = "${var.department}"
+  }
+}
+
 resource "aws_cloudwatch_log_group" "redash_webserver" {
   name = "${var.name_prefix}/redash-webserver"
 

@@ -8,7 +8,7 @@ data "template_file" "taskflow_scheduler_task_definition" {
   template = "${file("${path.module}/task_definitions/taskflow_scheduler.json")}"
 
   vars {
-    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/taskflow-scheduler:72be6889ac36c5a407feb38738428f27d748504b-v2"
+    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/taskflow-scheduler:fd7c9ab8e1acc153177c0172095f7a4aa1ea09a0"
     container_name   = "taskflow_scheduler"
     log_group_region = "${var.aws_region}"
     log_group_name   = "${aws_cloudwatch_log_group.taskflow_scheduler.name}"
@@ -141,7 +141,7 @@ data "template_file" "api_gateway_gateway_task_definition" {
   template = "${file("${path.module}/task_definitions/api_gateway_gateway.json")}"
 
   vars {
-    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/api-gateway-gateway:747a96a1a1eb0dd2b01081a428b0f6bc7ab6a7b5-v2"
+    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/api-gateway-gateway:747a96a1a1eb0dd2b01081a428b0f6bc7ab6a7b5-v3"
     log_group_region = "${var.aws_region}"
     log_group_name   = "${aws_cloudwatch_log_group.api_gateway_gateway.name}"
   }
@@ -172,13 +172,13 @@ resource "aws_ecs_service" "api_gateway_gateway" {
   ]
 }
 
-# Redash
+# Redash Webserver
 
 data "template_file" "redash_webserver_task_definition" {
   template = "${file("${path.module}/task_definitions/redash_webserver.json")}"
 
   vars {
-    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/redash:99e13dd579aa340de9b36812ea9387f5d076e95e"
+    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/redash:7f4c9e652fee330e5c1f2ab8ef7dcb0f6e43f367"
     container_name   = "redash_webserver"
     log_group_region = "${var.aws_region}"
     log_group_name   = "${aws_cloudwatch_log_group.redash_webserver.name}"
@@ -195,17 +195,81 @@ resource "aws_ecs_service" "redash_webserver" {
   name            = "${var.name_prefix}-redash-webserver"
   cluster         = "${aws_ecs_cluster.data_engineering_cluster.id}"
   task_definition = "${aws_ecs_task_definition.redash_webserver_task_definition.arn}"
-  desired_count   = 0
+  desired_count   = 2
   iam_role        = "${aws_iam_role.ecs_service.name}"
 
   load_balancer {
     elb_name = "${aws_elb.redash_webserver.id}"
     container_name   = "redash_webserver"
-    container_port   = "5000"
+    container_port   = "5003"
   }
 
   depends_on = [
     "aws_iam_role_policy.ecs_service",
     "aws_elb.redash_webserver",
+  ]
+}
+
+# Redash Worker
+
+data "template_file" "redash_worker_task_definition" {
+  template = "${file("${path.module}/task_definitions/redash_worker.json")}"
+
+  vars {
+    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/redash:26d78d43919872f66bdd988fa8ab52489230c3fd"
+    container_name   = "redash_worker"
+    log_group_region = "${var.aws_region}"
+    log_group_name   = "${aws_cloudwatch_log_group.redash_worker.name}"
+  }
+}
+
+resource "aws_ecs_task_definition" "redash_worker_task_definition" {
+  family                = "${var.name_prefix}-redash-worker"
+  task_role_arn         = "${aws_iam_role.redash.arn}"
+  container_definitions = "${data.template_file.redash_worker_task_definition.rendered}"
+}
+
+resource "aws_ecs_service" "redash_worker" {
+  name            = "${var.name_prefix}-redash-worker"
+  cluster         = "${aws_ecs_cluster.data_engineering_cluster.id}"
+  task_definition = "${aws_ecs_task_definition.redash_worker_task_definition.arn}"
+  desired_count   = 1
+}
+
+# Superset Webserver
+
+data "template_file" "superset_webserver_task_definition" {
+  template = "${file("${path.module}/task_definitions/superset_webserver.json")}"
+
+  vars {
+    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/superset:2ce760641261a3d8d74ea97aaea562e7ed6553b9"
+    container_name   = "superset_webserver"
+    log_group_region = "${var.aws_region}"
+    log_group_name   = "${aws_cloudwatch_log_group.superset_webserver.name}"
+  }
+}
+
+resource "aws_ecs_task_definition" "superset_webserver_task_definition" {
+  family                = "${var.name_prefix}-superset-webserver"
+  task_role_arn         = "${aws_iam_role.superset.arn}"
+  container_definitions = "${data.template_file.superset_webserver_task_definition.rendered}"
+}
+
+resource "aws_ecs_service" "superset_webserver" {
+  name            = "${var.name_prefix}-superset-webserver"
+  cluster         = "${aws_ecs_cluster.data_engineering_cluster.id}"
+  task_definition = "${aws_ecs_task_definition.superset_webserver_task_definition.arn}"
+  desired_count   = 2
+  iam_role        = "${aws_iam_role.ecs_service.name}"
+
+  load_balancer {
+    elb_name = "${aws_elb.superset_webserver.id}"
+    container_name   = "superset_webserver"
+    container_port   = "5004"
+  }
+
+  depends_on = [
+    "aws_iam_role_policy.ecs_service",
+    "aws_elb.superset_webserver",
   ]
 }

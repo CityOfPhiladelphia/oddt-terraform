@@ -39,10 +39,10 @@ variable "data_engineering_ecs_asg_min" {
 
 variable "data_engineering_ecs_asg_max" {
   description = "Maximum number of instaces for the data engineering Docker cluster auto scaling group"
-  default     = "4"
+  default     = "6"
 }
 
 variable "data_engineering_ecs_asg_desired" {
   description = "Desired number of instaces for the data engineering Docker cluster auto scaling group"
-  default     = "3"
+  default     = "4"
 }

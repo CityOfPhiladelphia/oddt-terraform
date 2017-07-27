@@ -62,3 +62,21 @@ resource "aws_cloudwatch_log_group" "redash_webserver" {
       Department = "${var.department}"
   }
 }
+
+resource "aws_cloudwatch_log_group" "redash_worker" {
+  name = "${var.name_prefix}/redash-worker"
+
+  tags {
+      Name = "${var.name_prefix}-redash-worker"
+      Department = "${var.department}"
+  }
+}
+
+resource "aws_cloudwatch_log_group" "superset_webserver" {
+  name = "${var.name_prefix}/superset-webserver"
+
+  tags {
+      Name = "${var.name_prefix}-superset-webserver"
+      Department = "${var.department}"
+  }
+}

@@ -244,6 +244,22 @@ resource "aws_security_group" "data_engineering_ecs_instance" {
     cidr_blocks = ["10.0.0.0/16"]
   }
 
+  ingress {
+    protocol  = "tcp"
+    from_port = 5003
+    to_port   = 5003
+
+    cidr_blocks = ["10.0.0.0/16"]
+  }
+
+  ingress {
+    protocol  = "tcp"
+    from_port = 5004
+    to_port   = 5004
+
+    cidr_blocks = ["10.0.0.0/16"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -296,6 +312,33 @@ resource "aws_security_group" "data_engineering_redis" {
 resource "aws_security_group" "data_engineering_redash_elb" {
   vpc_id = "${aws_vpc.data_engineering.id}"
   name   = "${var.name_prefix}-redash-elb-sg"
+
+  ingress {
+    protocol    = "tcp"
+    from_port   = 443
+    to_port     = 443
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+
+    cidr_blocks = [
+      "0.0.0.0/0",
+    ]
+  }
+
+  tags {
+      Name = "${var.name_prefix}-airflow-elb-sg"
+      Department = "${var.department}"
+  }
+}
+
+resource "aws_security_group" "data_engineering_superset_elb" {
+  vpc_id = "${aws_vpc.data_engineering.id}"
+  name   = "${var.name_prefix}-superset-elb-sg"
 
   ingress {
     protocol    = "tcp"

@@ -4,15 +4,8 @@
         "image": "${image_url}",
         "memory": 1024,
         "name": "${container_name}",
-        "command": ["server"],
+        "command": ["worker"],
         "essential": true,
-        "portMappings": [
-            {
-              "hostPort": 5003,
-              "containerPort": 5003,
-              "protocol": "tcp"
-            }
-        ],
         "environment": [
             {
                 "name": "AWS_DEFAULT_REGION",

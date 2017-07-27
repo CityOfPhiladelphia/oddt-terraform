@@ -4,12 +4,12 @@
         "image": "${image_url}",
         "memory": 1024,
         "name": "${container_name}",
-        "command": ["server"],
+        "command": ["runserver", "-p", "5004"],
         "essential": true,
         "portMappings": [
             {
-              "hostPort": 5003,
-              "containerPort": 5003,
+              "hostPort": 5004,
+              "containerPort": 5004,
               "protocol": "tcp"
             }
         ],
@@ -24,7 +24,7 @@
             },
             {
                 "name": "EASTERN_STATE_NAME",
-                "value": "redash"
+                "value": "superset"
             },
             {
                 "name": "EASTERN_STATE_ENV",

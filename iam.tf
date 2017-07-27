@@ -35,7 +35,9 @@ data "template_file" "data_engineering_cluster_instance_profile" {
     taskflow_api_server_log_group_arn = "${aws_cloudwatch_log_group.taskflow_api_server.arn}"
     api_gateway_api_log_group_arn = "${aws_cloudwatch_log_group.api_gateway_api.arn}"
     api_gateway_gateway_log_group_arn = "${aws_cloudwatch_log_group.api_gateway_gateway.arn}"
-    redash_log_group_arn = "${aws_cloudwatch_log_group.redash_webserver.arn}"
+    redash_webserver_log_group_arn = "${aws_cloudwatch_log_group.redash_webserver.arn}"
+    redash_worker_log_group_arn = "${aws_cloudwatch_log_group.redash_worker.arn}"
+    superset_webserver_log_group_arn = "${aws_cloudwatch_log_group.superset_webserver.arn}"
   }
 }
 
@@ -217,6 +219,13 @@ resource "aws_iam_role_policy" "taskflow" {
       "Resource": [
         "${aws_kms_key.taskflow_eastern_state_prod.arn}"
       ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "cloudwatch:PutMetricData"
+      ],
+      "Resource": ["*"]
     }
   ]
 }
@@ -347,6 +356,59 @@ resource "aws_iam_role_policy" "redash" {
       ],
       "Resource": [
         "${aws_kms_key.redash_eastern_state_prod.arn}"
+      ]
+    }
+  ]
+}
+EOF
+}
+
+## Superset containers
+
+resource "aws_iam_role" "superset" {
+  name = "${var.name_prefix}-superset-role"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "superset" {
+  name = "${var.name_prefix}-superset-policy"
+  role = "${aws_iam_role.superset.name}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::eastern-state/superset"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "kms:Decrypt"
+      ],
+      "Resource": [
+        "${aws_kms_key.superset_eastern_state_prod.arn}"
       ]
     }
   ]

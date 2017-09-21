@@ -132,3 +132,30 @@ resource "aws_elb" "superset_webserver" {
   connection_draining = true
   connection_draining_timeout = 400
 }
+
+resource "aws_elb" "phila_ppr_test" {
+  name = "phila-ppr-test"
+  subnets         = ["subnet-54412b0d"]
+  security_groups = ["sg-0c312e68"]
+
+  listener {
+    instance_port      = 80
+    instance_protocol  = "http"
+    lb_port            = 443
+    lb_protocol        = "https"
+    ssl_certificate_id = "arn:aws:acm:us-east-1:676612114792:certificate/e5f3e671-6f0c-4204-8363-b0504dbd4d5f"
+  }
+
+  health_check {
+    healthy_threshold = 2
+    unhealthy_threshold = 2
+    timeout = 60
+    target = "TCP:80"
+    interval = 300
+  }
+
+  cross_zone_load_balancing = true
+  idle_timeout = 400
+  connection_draining = true
+  connection_draining_timeout = 400
+}

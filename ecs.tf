@@ -8,7 +8,7 @@ data "template_file" "taskflow_scheduler_task_definition" {
   template = "${file("${path.module}/task_definitions/taskflow_scheduler.json")}"
 
   vars {
-    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/taskflow-scheduler:a79329dcbe41c4be8714748d4cebe8ec92fd98e1"
+    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/taskflow-scheduler:5b2dbf2498d910fc54bf882738b470c3f00e8aaf"
     container_name   = "taskflow_scheduler"
     log_group_region = "${var.aws_region}"
     log_group_name   = "${aws_cloudwatch_log_group.taskflow_scheduler.name}"
@@ -37,7 +37,7 @@ data "template_file" "taskflow_api_server_task_definition" {
   template = "${file("${path.module}/task_definitions/taskflow_api_server.json")}"
 
   vars {
-    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/taskflow-api-server:eadd73c7fa6eb9d7cfcbe89a4859fa824df99eb1"
+    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/taskflow-api-server:5b2dbf2498d910fc54bf882738b470c3f00e8aaf"
     container_name   = "taskflow_api_server"
     log_group_region = "${var.aws_region}"
     log_group_name   = "${aws_cloudwatch_log_group.taskflow_api_server.name}"

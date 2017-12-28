@@ -8,7 +8,7 @@ data "template_file" "taskflow_scheduler_task_definition" {
   template = "${file("${path.module}/task_definitions/taskflow_scheduler.json")}"
 
   vars {
-    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/taskflow-scheduler:3c400892fbfcb0f737fb696d3b067d40e1c3337a"
+    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/taskflow-scheduler:6218ec071a8d302ac9e54dd656c7d5d4795a6109"
     container_name   = "taskflow_scheduler"
     log_group_region = "${var.aws_region}"
     log_group_name   = "${aws_cloudwatch_log_group.taskflow_scheduler.name}"
@@ -37,7 +37,7 @@ data "template_file" "taskflow_api_server_task_definition" {
   template = "${file("${path.module}/task_definitions/taskflow_api_server.json")}"
 
   vars {
-    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/taskflow-api-server:3c400892fbfcb0f737fb696d3b067d40e1c3337a"
+    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/taskflow-api-server:6218ec071a8d302ac9e54dd656c7d5d4795a6109"
     container_name   = "taskflow_api_server"
     log_group_region = "${var.aws_region}"
     log_group_name   = "${aws_cloudwatch_log_group.taskflow_api_server.name}"
@@ -178,7 +178,7 @@ data "template_file" "redash_webserver_task_definition" {
   template = "${file("${path.module}/task_definitions/redash_webserver.json")}"
 
   vars {
-    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/redash:7f4c9e652fee330e5c1f2ab8ef7dcb0f6e43f367"
+    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/redash:21683e010cec529fc4e5466f466858c81cac9080"
     container_name   = "redash_webserver"
     log_group_region = "${var.aws_region}"
     log_group_name   = "${aws_cloudwatch_log_group.redash_webserver.name}"
@@ -216,7 +216,7 @@ data "template_file" "redash_worker_task_definition" {
   template = "${file("${path.module}/task_definitions/redash_worker.json")}"
 
   vars {
-    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/redash:26d78d43919872f66bdd988fa8ab52489230c3fd"
+    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/redash:21683e010cec529fc4e5466f466858c81cac9080"
     container_name   = "redash_worker"
     log_group_region = "${var.aws_region}"
     log_group_name   = "${aws_cloudwatch_log_group.redash_worker.name}"

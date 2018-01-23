@@ -8,7 +8,7 @@ data "template_file" "taskflow_scheduler_task_definition" {
   template = "${file("${path.module}/task_definitions/taskflow_scheduler.json")}"
 
   vars {
-    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/taskflow-scheduler:11fbdf192370a17f5995293732c2416674f719c6"
+    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/taskflow-scheduler:107d20f47ed999a8eb9d3b6e28a89358eb9129c8"
     container_name   = "taskflow_scheduler"
     log_group_region = "${var.aws_region}"
     log_group_name   = "${aws_cloudwatch_log_group.taskflow_scheduler.name}"
@@ -37,7 +37,7 @@ data "template_file" "taskflow_api_server_task_definition" {
   template = "${file("${path.module}/task_definitions/taskflow_api_server.json")}"
 
   vars {
-    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/taskflow-api-server:11fbdf192370a17f5995293732c2416674f719c6"
+    image_url        = "676612114792.dkr.ecr.us-east-1.amazonaws.com/taskflow-api-server:107d20f47ed999a8eb9d3b6e28a89358eb9129c8"
     container_name   = "taskflow_api_server"
     log_group_region = "${var.aws_region}"
     log_group_name   = "${aws_cloudwatch_log_group.taskflow_api_server.name}"

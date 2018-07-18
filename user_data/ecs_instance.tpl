@@ -1,16 +1,12 @@
 #!/bin/bash
 echo ECS_CLUSTER=${cluster_name} >> /etc/ecs/ecs.config
 
-export LC_ALL=C.UTF-8
-export LANG=C.UTF-8
+sudo yum -y install python36 python36-virtualenv python36-pip git
 
-apt-get update
-apt-get -y upgrade
-apt-get install -y python3 python3-pip git
+sudo pip-3.6 install git+https://github.com/CityOfPhiladelphia/keytothecity.git
 
-pip3 install --upgrade pip3
-
-pip3 install git+https://github.com/CityOfPhiladelphia/keytothecity.git
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
 
 keytothecity sync ${keytothecity_config_name} -c ${keytothecity_config}
 keytothecity install_cron ${keytothecity_config_name} -c ${keytothecity_config}

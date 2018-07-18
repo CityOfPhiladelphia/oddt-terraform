@@ -1,3 +1,5 @@
 # Mac
 ._*
 .DS_Store
+
+.terraform

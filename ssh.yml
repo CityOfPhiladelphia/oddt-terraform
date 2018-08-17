@@ -2,14 +2,17 @@ bucket: oddt-pub-keys
 configurations:
   bastion:
     ubuntu:
-      - andrew.w.madonna@gmail.com
-      - vito@2b6f76b5b735
+      - jbentley33@gmail.com
+      - alex@IT04GISPINAIS2L
+      - tim@timwis.com
   tunnel_gateway:
     ubuntu:
-      - andrew.w.madonna@gmail.com
-      - vito@2b6f76b5b735
+      - jbentley33@gmail.com
+      - tim@timwis.com
+      - alex@IT04GISPINAIS2L
       - phl-airflowdev
   airflow:
     ec2-user:
-      - andrew.w.madonna@gmail.com
-      - vito@2b6f76b5b735
+      - jbentley33@gmail.com
+      - alex@IT04GISPINAIS2L
+      - tim@timwis.com

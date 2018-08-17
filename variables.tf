@@ -14,7 +14,7 @@ variable "aws_region" {
 
 variable "key_name" {
   description = "RSA key pair to place on created instances"
-  default     = "andrew.madonna"
+  default     = "james.bentley"
 }
 
 variable "keytothecity_config" {
